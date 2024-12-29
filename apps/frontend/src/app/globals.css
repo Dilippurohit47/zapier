@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  background-color: #fffdf9;
+}
+
+.simple-button {
+
+  @apply rounded-md  px-4 py-2  text-white font-semibold bg-blue-500
+
+}
