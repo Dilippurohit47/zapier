@@ -1,8 +1,7 @@
 import express from "express";
 import { authMiddleware } from "./middleware";
 import { zapCreateSchema } from "../types";
-import {prisma} from "@repo/db-v2/prisma"
-
+import { prisma } from "@repo/db-v2/prisma";
 
 import { errorResponse, formatZodError } from "../utils/helper";
 const router = express.Router();
@@ -20,7 +19,7 @@ router.post("/", authMiddleware, async (req, res) => {
       });
       return;
     }
-    await prisma.$transaction(async (tx:any) => {
+    await prisma.$transaction(async (tx: any) => {
       const zap = await tx.zap.create({
         data: {
           userId: parseInt(id),
@@ -79,6 +78,9 @@ router.get("/", authMiddleware, async (req, res) => {
             type: true,
           },
         },
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
