@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { LinkButton } from "./buttons/LinkButton";
 import { PrimaryButton } from "./buttons/PrimaryButton";
 import Link from "next/link";
@@ -8,9 +8,31 @@ import { useDispatch } from "react-redux";
 import { logout } from "@/lib/redux/reducers/userReducer";
 import { BACKEND_URL } from "@/app/config";
 import { toast } from "react-toastify";
+
+type NavLink = {
+  label: string;
+  href: string;
+};
+
+const navLinks: NavLink[] = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+  },
+  {
+    label: "Contact Sales",
+    href: "/contact-sale",
+  },
+  {
+    label: "About us",
+    href: "/contact-sale",
+  },
+];
+
 export const Appbar = () => {
   const router = useRouter();
   const isUserLogin = useAppSelector((state) => state.userReducer.isloggedIn);
+
   const dispatch = useDispatch();
   const logOutUser = async () => {
     try {
@@ -29,44 +51,53 @@ export const Appbar = () => {
   };
 
   return (
-    <div className="flex border-b justify-between p-4">
+    <div className="flex border-b justify-between py-4 px-8">
       <Link href="/">
         <div className="flex flex-col justify-center text-2xl font-extrabold">
           Zapier
         </div>
       </Link>
-      <div className="flex">
-        <div className="pr-4">
-          <LinkButton onClick={() => {}}>Contact Sales</LinkButton>
+      <div className="flex justify-center items-center gap-5 ">
+        <div className="space-x-5">
+          {navLinks.map((n) => (
+            <Link
+              className="font-semibold hover:text-[#B45309]"
+              href={`${n.href}`}
+            >
+              {n.label}
+            </Link>
+          ))}
         </div>
-        {!isUserLogin && (
-          <div className="pr-4">
+        <div>
+          {!isUserLogin && (
+            <div className="pr-4">
+              <LinkButton
+                onClick={() => {
+                  router.push("/login");
+                }}
+              >
+                Login
+              </LinkButton>
+            </div>
+          )}
+          {isUserLogin ? (
             <LinkButton
               onClick={() => {
-                router.push("/login");
+                logOutUser();
               }}
             >
-              Login
+              Logout
             </LinkButton>
-          </div>
-        )}
-        {isUserLogin ? (
-          <LinkButton
-            onClick={() => {
-              logOutUser();
-            }}
-          >
-            Logout
-          </LinkButton>
-        ) : (
-          <PrimaryButton
-            onClick={() => {
-              router.push("/signup");
-            }}
-          >
-            Signup
-          </PrimaryButton>
-        )}
+          ) : (
+            <PrimaryButton
+              onClick={() => {
+                router.push("/signup");
+              }}
+            >
+              Signup
+            </PrimaryButton>
+          )}
+        </div>
       </div>
     </div>
   );

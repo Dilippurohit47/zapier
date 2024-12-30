@@ -15,7 +15,6 @@ export default function Home() {
   const isUserLogin = useAppSelector((state) => state.userReducer.isloggedIn);
   return (
     <main className="pb-48 ">
-      <button>ok</button>
       <Hero isUserLogin={isUserLogin} />
       <div className="pt-8">
         <HeroVideo />

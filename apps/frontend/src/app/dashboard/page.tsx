@@ -5,6 +5,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../config";
 import Link from "next/link";
+import Loader from "@/components/Loader";
 
 export interface Zap {
   id: string;
@@ -31,7 +32,7 @@ export interface Zap {
       image: string;
     };
   };
-  createdAt:string
+  createdAt: string;
 }
 
 function useZaps() {
@@ -60,7 +61,7 @@ export default function () {
   const { loading, zaps } = useZaps();
   return (
     <div>
-      <div className="flex justify-center pt-8">
+      <div className="flex justify-center  pt-8">
         <div className="max-w-screen-lg	 w-full">
           <div className="flex justify-between pr-8 ">
             <div className="text-2xl font-bold">My Zaps</div>
@@ -71,7 +72,9 @@ export default function () {
         </div>
       </div>
       {loading ? (
-        "Loading..."
+        <div className="flex justify-center items-center h-[80vh]  ">
+          <Loader />
+        </div>
       ) : (
         <div className="flex justify-center">
           {" "}
