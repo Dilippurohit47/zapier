@@ -25,6 +25,7 @@ export function parse(
         if (typeof localValues === "string") {
           localValues = JSON.parse(localValues);
         }
+        // @ts-ignore
         localValues = localValues[keys[i]];
       }
       finalString += localValues;

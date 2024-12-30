@@ -43,8 +43,8 @@ export default function () {
 
   const verifyEmail = async () => {
     try {
-      const res = await axios.post(
-        `${BACKEND_URL}/api/v1/user/verify`,
+      const res = await axios.put(
+        `${BACKEND_URL}/api/v1/user/verify-otp`,
         {
           email,
           otp,

@@ -4,9 +4,9 @@ import {prisma} from "@repo/db-v2/prisma"
 
 const TOPIC_Name = "zap-events";
 const kafka = new Kafka({
-  clientId: "outbox-processor",
+  clientId: "outbox-processor", 
   brokers: ["localhost:9092"],
-});
+}); 
 
 async function main() {
   const producer =  kafka.producer();
@@ -21,6 +21,7 @@ async function main() {
       await sleep(1000);
       continue;
     }
+
     producer.send({
       topic: TOPIC_Name,
       messages: pendingRow.map((r:any) => {

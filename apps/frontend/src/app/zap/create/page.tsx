@@ -6,6 +6,7 @@ import { PrimaryButton } from "@/components/buttons/PrimaryButton";
 import { Modal } from "@/components/models/Modal";
 import { TriggerModal } from "@/components/models/triggerModel";
 import axios, { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
@@ -45,7 +46,7 @@ export default function () {
     []
   );
   const [selectedModalId, setselectedModalId] = useState<string>("");
-  console.log(selectedActions);
+  const router = useRouter();
   const PublishZap = async () => {
     try {
       const res = await axios.post(
@@ -65,6 +66,7 @@ export default function () {
       console.log(res);
       if (res.status === 200) {
         toast.success("Zap is Published");
+        router.push("/dashboard");
       }
     } catch (error) {
       if (error instanceof AxiosError) {

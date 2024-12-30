@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
-
+import dotenv from "dotenv";
+dotenv.config();
 const transport = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: 587,
@@ -12,7 +13,6 @@ const transport = nodemailer.createTransport({
     rejectUnauthorized: false,
   },
 });
-
 export async function sendEmail(to: string, otp: string) {
   try {
     const body = `Hello,
@@ -26,7 +26,6 @@ Zapier Team`;
       subject: "Verification Code from Zapier",
       text: body,
     });
-
     return true;
   } catch (error) {
     console.log("Error sending email:", error);

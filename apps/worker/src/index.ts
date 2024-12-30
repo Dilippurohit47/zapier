@@ -1,7 +1,8 @@
 import { JsonObject } from "@prisma/client/runtime/library";
 import { Kafka } from "kafkajs";
 import { parse } from "./parser";
-import {prisma} from "@repo/db-v2/prisma" 
+import { prisma } from "@repo/db-v2/prisma";
+import { sendEmail } from "./email";
 
 const TOPIC_Name = "zap-events";
 
@@ -42,7 +43,7 @@ async function main() {
       });
 
       const currentAction = zapRunDetails?.zap.actions.find(
-        (x:any) => x.sortingOrder === stage
+        (x: any) => x.sortingOrder === stage
       );
       if (!currentAction) {
         console.log("current action not found");
@@ -59,20 +60,20 @@ async function main() {
           zapRunMetadata
         );
         console.log(`Sending out email to ${to} body is ${body}`);
-        // await sendEmail(to, body);
+        await sendEmail(to, body);
       }
-      if (currentAction.type.id === "send-sol") {
-        const amount = parse(
-          (currentAction.metadata as JsonObject)?.amount as string,
-          zapRunMetadata
-        );
-        const address = parse(
-          (currentAction.metadata as JsonObject)?.address as string,
-          zapRunMetadata
-        );
-        console.log(`Sending out SOL of ${amount} to address ${address}`);
-        // await sendSol(address, amount);
-      }
+      // if (currentAction.type.id === "send-sol") {
+      //   const amount = parse(
+      //     (currentAction.metadata as JsonObject)?.amount as string,
+      //     zapRunMetadata
+      //   );
+      //   const address = parse(
+      //     (currentAction.metadata as JsonObject)?.address as string,
+      //     zapRunMetadata
+      //   );
+      //   console.log(`Sending out SOL of ${amount} to address ${address}`);
+      //   // await sendSol(address, amount);
+      // }
 
       await new Promise<void>((resolve) => {
         setTimeout(() => {

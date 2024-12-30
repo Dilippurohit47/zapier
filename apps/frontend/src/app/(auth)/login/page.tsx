@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 export default function () {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
   const router = useRouter();
   const dispatch = useDispatch();
   const login = async () => {
@@ -61,10 +62,15 @@ export default function () {
         type="password"
         placeholder="Password"
       ></Input>
+      <div className="flex justify-between">
+        <Link href={"/forgot-password"} className="text-blue-400 text-sm">
+          forgot password ?
+        </Link>
+        <Link href={`/verify/${email}`} className="text-blue-400 text-sm">
+          want to verify ?
+        </Link>
+      </div>
 
-      <Link href={"/forgot-password"} className="text-blue-400 text-sm">
-        forgot password ?
-      </Link>
       <div className="pt-4">
         <PrimaryButton onClick={login} size="big">
           Login

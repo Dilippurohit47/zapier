@@ -7,8 +7,7 @@ import { sendEmail } from "../sendMail";
 import { errorResponse, formatZodError } from "../utils/helper";
 import bcrypt from "bcrypt";
 const router = express.Router();
-import {prisma} from "@repo/db-v2/prisma"
-
+import { prisma } from "@repo/db-v2/prisma";
 
 router.post("/signup", async (req, res) => {
   try {
@@ -43,7 +42,6 @@ router.post("/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(parsedData.data.password, 10);
 
     const emailSent = await sendEmail(parsedData.data.email, Otp);
-
     if (!emailSent) {
       errorResponse(res, 500, "Internal server error");
       return;
@@ -78,7 +76,7 @@ router.post("/signin", async (req, res) => {
       });
       return;
     }
-  
+
     const user = await prisma.user.findFirst({
       where: {
         email: parsedData.data.email,
@@ -119,7 +117,7 @@ router.post("/signin", async (req, res) => {
       message: "Welcome back",
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     errorResponse(res, 500, "Internal server error");
   }
 });
@@ -145,6 +143,7 @@ router.get("/", authMiddleware, async (req, res) => {
 router.put("/send-otp", async (req, res) => {
   try {
     const { email } = req.body;
+    console.log(email);
     const user = await prisma.user.findFirst({
       where: {
         email: email,
@@ -184,7 +183,7 @@ router.put("/send-otp", async (req, res) => {
   }
 });
 
-router.post("/verify-otp", async (req, res) => {
+router.put("/verify-otp", async (req, res) => {
   try {
     const { email, otp } = req.body;
 
@@ -204,9 +203,29 @@ router.post("/verify-otp", async (req, res) => {
       return;
     }
 
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        otpExpiry: null,
+        otp: null,
+        verified: true,
+      },
+    });
+
+    const token = JWT.sign({ id: user.id }, JWT_PASSWORD, {
+      expiresIn: "30d",
+    });
+    res.cookie("zapier-token", token, {
+      httpOnly: false,
+      secure: false,
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+
     res
       .status(200)
-      .json({ userId: user.id, message: "OTP verified successfully" });
+      .json({ userId: user.id, message: "Email verified successfully" });
   } catch (error) {
     console.error(error);
     errorResponse(res, 500, "Internal server error");
