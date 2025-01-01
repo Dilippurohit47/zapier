@@ -68,17 +68,15 @@ export const Appbar = () => {
             </Link>
           ))}
         </div>
-        <div>
+        <div className="flex justify-center items-center gap-5
+        ">
           {!isUserLogin && (
-            <div className="pr-4">
-              <LinkButton
-                onClick={() => {
-                  router.push("/login");
-                }}
-              >
-                Login
-              </LinkButton>
-            </div>
+            <Link
+              className="font-semibold hover:text-[#B45309]"
+              href={`/login`}
+            >
+              Login
+            </Link>
           )}
           {isUserLogin ? (
             <LinkButton
