@@ -105,7 +105,7 @@ router.post("/signin", async (req, res) => {
       return;
     }
 
-    const token = JWT.sign({ id: user.id }, JWT_PASSWORD, {
+    const token = JWT.sign({ id: user.id }, JWT_PASSWORD!, {
       expiresIn: "30d",
     });
     res.cookie("zapier-token", token, {
