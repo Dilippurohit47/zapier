@@ -59,8 +59,9 @@ export const Appbar = () => {
       </Link>
       <div className="flex justify-center items-center gap-5 ">
         <div className="space-x-5">
-          {navLinks.map((n) => (
+          {navLinks.map((n,index) => (
             <Link
+            key={index}
               className="font-semibold hover:text-[#B45309]"
               href={`${n.href}`}
             >

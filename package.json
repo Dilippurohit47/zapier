@@ -21,6 +21,8 @@
     "packages/*"
   ],
   "dependencies": {
+    "express": "^4.21.2",
+    "googleapis": "^144.0.0",
     "next": "^15.1.3"
   }
 }

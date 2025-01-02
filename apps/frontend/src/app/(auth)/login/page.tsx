@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import { BACKEND_URL } from "../../config";
 import { fetchAndSaveUser } from "@/lib/hooks/saveUserInRedux";
 import { useDispatch } from "react-redux";
+import GoogleLoginButton from "@/components/GoogleLoginButton";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function () {
   const [email, setEmail] = useState<string>("");
@@ -71,10 +73,16 @@ export default function () {
         </Link>
       </div>
 
-      <div className="pt-4">
+      <div className="pt-4 space-y-3">
         <PrimaryButton onClick={login} size="big">
           Login
         </PrimaryButton>
+        <p className="text-center text-slate-500 font-semibold">
+          Or 
+        </p>
+        <GoogleOAuthProvider clientId="860063088948-9dalgkd113he6c4dhjkfd8qo11vankv6.apps.googleusercontent.com">
+          <GoogleLoginButton />
+        </GoogleOAuthProvider>
       </div>
     </div>
   );
