@@ -14,7 +14,7 @@ export async function authMiddleware(
       errorResponse(res, 403, "You are not logged in!");
       return;
     }
-    const payload = jwt.verify(token, JWT_PASSWORD);
+    const payload = jwt.verify(token, JWT_PASSWORD!);
     // @ts-ignore
     req.id = payload.id;
     next();

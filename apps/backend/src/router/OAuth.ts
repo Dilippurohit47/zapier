@@ -27,7 +27,6 @@ app.post("/google/callback", async (req, res) => {
     );
 
     const userInfo = await userInfoResponse.json();
-    console.log(userInfo);
     const user = await prisma.user.findFirst({
       where: {
         email: userInfo.email,
@@ -36,7 +35,7 @@ app.post("/google/callback", async (req, res) => {
 
     if (user) {
       sendToken(res, user);
-      res.status(200).json({ message: "User authenticated and saved" });
+      res.status(200).json({ message: "Welcome back" });
       return;
     }
 
@@ -48,9 +47,8 @@ app.post("/google/callback", async (req, res) => {
       },
     });
     sendToken(res, newUser);
-    res.status(200).json({ message: "User authenticated and saved" });
+    res.status(200).json({ message: "welcome to zapier" });
   } catch (error: any) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 });

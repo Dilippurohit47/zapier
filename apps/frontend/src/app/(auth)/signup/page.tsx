@@ -47,7 +47,7 @@ export default function () {
         `${BACKEND_URL}/api/v1/user/verify-otp`,
         {
           email,
-          otp,
+          otp: otp.trim(),
         },
         {
           withCredentials: true,
@@ -69,59 +69,59 @@ export default function () {
   };
 
   return (
-      <div className="flex-1 pt-6 pb-6 mt-12 px-4 border rounded">
-        {!otpDialog && (
-          <Input
-            value={name}
-            label={"Name"}
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-            type="text"
-            placeholder="Your name"
-          ></Input>
-        )}
+    <div className="flex-1 pt-6 pb-6 mt-12 px-4 border rounded">
+      {!otpDialog && (
         <Input
-          value={email}
+          value={name}
+          label={"Name"}
           onChange={(e) => {
-            setEmail(e.target.value);
+            setName(e.target.value);
           }}
-          label={"Email"}
-          type="email"
-          placeholder="Your Email"
+          type="text"
+          placeholder="Your name"
         ></Input>
-        {otpDialog ? (
-          <Input
-            value={otp}
-            onChange={(e) => {
-              setOtp(e.target.value);
-            }}
-            label={"Otp"}
-            type="text"
-            placeholder="enter your otp"
-          ></Input>
-        ) : (
-          <Input
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-            label={"Password"}
-            type="password"
-            placeholder="Password"
-          ></Input>
-        )}
+      )}
+      <Input
+        value={email}
+        onChange={(e) => {
+          setEmail(e.target.value);
+        }}
+        label={"Email"}
+        type="email"
+        placeholder="Your Email"
+      ></Input>
+      {otpDialog ? (
+        <Input
+          value={otp}
+          onChange={(e) => {
+            setOtp(e.target.value);
+          }}
+          label={"Otp"}
+          type="text"
+          placeholder="enter your otp"
+        ></Input>
+      ) : (
+        <Input
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+          label={"Password"}
+          type="password"
+          placeholder="Password"
+        ></Input>
+      )}
 
-        <div className="pt-4">
-          {otpDialog ? (
-            <PrimaryButton onClick={() => verifyEmail()} size="big">
-              Verify
-            </PrimaryButton>
-          ) : (
-            <PrimaryButton onClick={() => SignUp()} size="big">
-              Get started free
-            </PrimaryButton>
-          )}
+      <div className="pt-4">
+        {otpDialog ? (
+          <PrimaryButton onClick={() => verifyEmail()} size="big">
+            Verify
+          </PrimaryButton>
+        ) : (
+          <PrimaryButton onClick={() => SignUp()} size="big">
+            Get started free
+          </PrimaryButton>
+        )}
       </div>
     </div>
   );

@@ -1,13 +1,11 @@
-import express from "express";
-import { authMiddleware } from "./middleware";
-import { resetPasswordSchema, signinSchema, SignupSchema } from "../types";
-import JWT from "jsonwebtoken";
-import { JWT_PASSWORD } from "../config";
-import { sendEmail } from "../sendMail";
-import { errorResponse, formatZodError } from "../utils/helper";
-import bcrypt from "bcrypt";
-const router = express.Router();
 import { prisma } from "@repo/db-v2/prisma";
+import bcrypt from "bcrypt";
+import express from "express";
+import { sendEmail } from "../sendMail";
+import { resetPasswordSchema, signinSchema, SignupSchema } from "../types";
+import { errorResponse, formatZodError, sendToken } from "../utils/helper";
+import { authMiddleware } from "./middleware";
+const router = express.Router();
 
 router.post("/signup", async (req, res) => {
   try {
@@ -105,14 +103,7 @@ router.post("/signin", async (req, res) => {
       return;
     }
 
-    const token = JWT.sign({ id: user.id }, JWT_PASSWORD!, {
-      expiresIn: "30d",
-    });
-    res.cookie("zapier-token", token, {
-      httpOnly: false,
-      secure: false,
-      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    });
+    sendToken(res, user);
     res.json({
       message: "Welcome back",
     });
@@ -159,7 +150,6 @@ router.put("/send-otp", async (req, res) => {
       .padStart(6, "0");
     const otpExpiryTime = new Date(Date.now() + 5 * 60 * 1000);
     const emailSent = await sendEmail(user?.email, Otp);
-    // const emailSent = true
     if (!emailSent) {
       errorResponse(res, 500, "Internal server error");
       return;
@@ -214,14 +204,7 @@ router.put("/verify-otp", async (req, res) => {
       },
     });
 
-    const token = JWT.sign({ id: user.id }, JWT_PASSWORD, {
-      expiresIn: "30d",
-    });
-    res.cookie("zapier-token", token, {
-      httpOnly: false,
-      secure: false,
-      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    });
+    sendToken(res, user);
 
     res
       .status(200)

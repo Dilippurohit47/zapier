@@ -23,19 +23,28 @@ export const formatZodError = (error: errorType[]) => {
 interface UserType {
   id: number;
 }
-
 export const sendToken = (res: Response, user: UserType) => {
-  if(!res || !user){
-    return 
+  if (!res || !user || !user.id) {
+    console.error("Invalid response or user data provided");
+    return;
   }
-  const token = JWT.sign({ id: user.id }, JWT_PASSWORD!, {
-    expiresIn: "30d",
-  });
 
-  res.cookie("zapier-token", token, {
-    httpOnly: true,
-    secure: false,
-    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-  });
-  console.log("token sent")
+  const isProduction = process.env.NODE_ENV === "production";
+  const cookieName = process.env.COOKIE_NAME || "zapier-token";
+
+  try {
+    const token = JWT.sign({ id: user.id }, JWT_PASSWORD!, {
+      expiresIn: "30d",
+    });
+
+    res.cookie(cookieName, token, {
+      httpOnly: true,
+      secure: isProduction,
+      path: "/",
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+    });
+
+  } catch (err) {
+    console.error("Error generating or sending token:", err);
+  }
 };

@@ -81,7 +81,7 @@ export default function () {
           Or 
         </p>
         <GoogleOAuthProvider clientId="860063088948-9dalgkd113he6c4dhjkfd8qo11vankv6.apps.googleusercontent.com">
-          <GoogleLoginButton />
+          <GoogleLoginButton dispatch={dispatch} fetchAndSaveUser={fetchAndSaveUser} router={router} />
         </GoogleOAuthProvider>
       </div>
     </div>
