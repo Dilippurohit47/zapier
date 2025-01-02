@@ -6,6 +6,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { BACKEND_URL } from "../../config";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import GoogleLoginButton from "@/components/GoogleLoginButton";
+import { useDispatch } from "react-redux";
+import { fetchAndSaveUser } from "@/lib/hooks/saveUserInRedux";
 
 export default function () {
   const router = useRouter();
@@ -14,6 +18,7 @@ export default function () {
   const [password, setPassword] = useState<string>("");
   const [otpDialog, setOtpDialog] = useState<boolean>(false);
   const [otp, setOtp] = useState<string>("");
+  const dispatch = useDispatch();
   const SignUp = async () => {
     try {
       const res = await axios.post(
@@ -56,10 +61,10 @@ export default function () {
 
       if (res.status === 200) {
         toast.success("Email verified successfully");
+        fetchAndSaveUser(dispatch);
         router.push("/");
       }
     } catch (error) {
-      console.log(error);
       if (error instanceof AxiosError) {
         toast.error(error.response?.data.message || "Internal server error");
       } else {
@@ -122,6 +127,17 @@ export default function () {
             Get started free
           </PrimaryButton>
         )}
+
+        <div className="pt-4 space-y-3">
+          <p className="text-center text-slate-500 font-semibold">Or</p>
+          <GoogleOAuthProvider clientId="860063088948-9dalgkd113he6c4dhjkfd8qo11vankv6.apps.googleusercontent.com">
+            <GoogleLoginButton
+              dispatch={dispatch}
+              fetchAndSaveUser={fetchAndSaveUser}
+              router={router}
+            />
+          </GoogleOAuthProvider>
+        </div>
       </div>
     </div>
   );
