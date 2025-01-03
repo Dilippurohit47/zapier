@@ -1,9 +1,7 @@
 import express from "express";
 import { prisma } from "@repo/db-v2/prisma";
 const app = express();
-
 app.use(express.json());
-
 app.get("/", (req, res) => {
   res.send(
     "Hello from hooks  here we come when any zap get triggered or run !"
@@ -12,8 +10,6 @@ app.get("/", (req, res) => {
 app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
   const zapId = req.params.zapId;
   const body = req.body;
-  console.log(body)
-  console.log("checking webhooks")
   if (!body || Object.keys(body).length === 0) {
     res.status(403).json({
       message: "Please enter all fields",
@@ -42,3 +38,4 @@ const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
 });
+ 

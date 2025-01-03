@@ -50,30 +50,48 @@ async function main() {
         return;
       }
       const zapRunMetadata = zapRunDetails?.metadata;
+
       if (currentAction.type.id === "email") {
+        const cleanString = zapRunMetadata.comment.body.replace(
+          /[\r\n\s{}]/g,
+          ""
+        );
+        const keyValuePairs = cleanString.split(",");
+
+        const resultObject = keyValuePairs.reduce((obj: any, pair: any) => {
+          const [key, value] = pair.split(":");
+          obj[key] = isNaN(value) ? value : parseFloat(value);
+          return obj;
+        }, {});
+        const formattedData = {
+          comment: {
+            email: resultObject.email,
+            amount: resultObject.amount,
+          },
+        };
         const body = parse(
           (currentAction.metadata as JsonObject)?.body as string,
-          zapRunMetadata
+          formattedData
         );
         const to = parse(
           (currentAction.metadata as JsonObject)?.email as string,
-          zapRunMetadata
+          formattedData
         );
         console.log(`Sending out email to ${to} body is ${body}`);
         await sendEmail(to, body);
       }
-      // if (currentAction.type.id === "send-sol") {
-      //   const amount = parse(
-      //     (currentAction.metadata as JsonObject)?.amount as string,
-      //     zapRunMetadata
-      //   );
-      //   const address = parse(
-      //     (currentAction.metadata as JsonObject)?.address as string,
-      //     zapRunMetadata
-      //   );
-      //   console.log(`Sending out SOL of ${amount} to address ${address}`);
-      //   // await sendSol(address, amount);
-      // }
+      if (currentAction.type.id === "send-sol") {
+        const amount = parse(
+          (currentAction.metadata as JsonObject)?.amount as string,
+          zapRunMetadata
+        );
+        const address = parse(
+          (currentAction.metadata as JsonObject)?.address as string,
+          zapRunMetadata
+        );
+        console.log(`Sending out SOL of ${amount} to address ${address}`);
+        // await sendSol(address, amount);
+      }
 
       await new Promise<void>((resolve) => {
         setTimeout(() => {
@@ -81,7 +99,6 @@ async function main() {
         }, 500);
       });
 
-      const zapId = message.value?.toString();
       const lastStage = (zapRunDetails?.zap.actions?.length || 1) - 1;
 
       if (lastStage !== stage) {
