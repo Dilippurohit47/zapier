@@ -61,7 +61,7 @@ export default function () {
   const { loading, zaps } = useZaps();
   return (
     <div>
-      <div className="flex justify-center  pt-8">
+      <div className="flex justify-center  pt-8 bg-[#FFFDF9]">
         <div className="max-w-screen-lg	 w-full">
           <div className="flex justify-between pr-8 ">
             <div className="text-2xl font-bold">My Zaps</div>
@@ -72,7 +72,7 @@ export default function () {
         </div>
       </div>
       {loading ? (
-        <div className="flex justify-center items-center h-[80vh]  ">
+        <div className="flex justify-center items-center h-[80vh]   ">
           <Loader />
         </div>
       ) : (
