@@ -4,6 +4,6 @@
     "outDir": "dist",
     "rootDir": "src"
   },
-  "include": ["src"],
+  "include": ["src", "node_modules/@prisma/client"],
   "exclude": ["node_modules", "dist"]
 }

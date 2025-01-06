@@ -62,7 +62,6 @@ router.get("/", authMiddleware, async (req, res) => {
   try {
     // @ts-ignore
     const id = req.id;
-
     const zap = await prisma.zap.findMany({
       where: {
         userId: id,
@@ -97,7 +96,6 @@ router.get("/:zapid", authMiddleware, async (req, res) => {
     // @ts-ignore
     const id = req.id;
     const zapId = req.params.zapid;
-
     const zap = await prisma.zap.findMany({
       where: {
         userId: id,
@@ -125,4 +123,42 @@ router.get("/:zapid", authMiddleware, async (req, res) => {
   }
 });
 
-export const zapRouter = router;
+router.delete("/:id", authMiddleware, async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (!id) {
+      errorResponse(res, 404, "Zap not found");
+      return;
+    }
+
+    const action = await prisma.action.findFirst({
+      where:{
+        zapId:id
+      }
+    })
+    await prisma.$transaction(async (tx: any) => {
+      await tx.trigger.delete({
+        where: {
+          zapId: id,
+        },
+      });
+      await tx.action.delete({
+        where: {
+          id: action.id,
+        },
+      });
+      await tx.zap.delete({
+        where: {
+          id: id,
+        },
+      });
+      res.json({
+        message: "Zap deleted Successfully",
+      });
+    });
+  } catch (error) {
+    console.log(error);
+    errorResponse(res, 500, "Internal server error");
+  }
+});
+export const zapRouter = router; 

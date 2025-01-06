@@ -36,11 +36,8 @@ export const sendToken = (res: Response, user: UserType) => {
     const token = JWT.sign({ id: user.id }, JWT_PASSWORD!, {
       expiresIn: "30d",
     });
-
     res.cookie(cookieName, token, {
       httpOnly: true,
-      secure: isProduction,
-      path: "/",
       expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
     });
 
