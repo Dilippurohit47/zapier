@@ -6,6 +6,7 @@ import {OAuth} from "./router/OAuth";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { triggerRouter } from "./router/trigger";
+import { addAppRouter } from "./router/addApp";
 const app: Application = express();
 app.use(cookieParser());
 app.use(
@@ -23,6 +24,7 @@ app.use("/api/v1/auth", OAuth);
 app.use("/api/v1/zap", zapRouter);
 app.use("/api/v1/actions", actionRouter);
 app.use("/api/v1/trigger", triggerRouter);
+app.use("/api/v1/add-app",addAppRouter)
 
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
