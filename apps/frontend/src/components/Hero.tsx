@@ -1,5 +1,4 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { PrimaryButton } from "./buttons/PrimaryButton";
 import { SecondaryButton } from "./buttons/SecondaryBUtton";
 import { Feature } from "./Feature";
@@ -9,6 +8,12 @@ export const Hero = ({ isUserLogin }: { isUserLogin: boolean }) => {
   return (
     <div>
       <div className="flex justify-center">
+        <Link
+          href="https://github.com/login/oauth/authorize?client_id=Ov23liEyUark8iVMzES2&scope=SCOPES&redirect_uri=http://localhost:3002/api/v1/add-app/github/callback
+"
+        >
+          Github
+        </Link>
         <div className="text-5xl  font-semibold text-center pt-8 max-w-xl">
           Automate as fast as you can type
         </div>

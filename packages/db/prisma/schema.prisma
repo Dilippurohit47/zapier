@@ -22,6 +22,7 @@ model User {
   otp       String? 
   otpExpiry DateTime?
   zaps     Zap[]
+  githubToken String?
 }
 
 model Zap {

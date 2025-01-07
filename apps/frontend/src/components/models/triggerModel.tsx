@@ -2,8 +2,8 @@ export function TriggerModal({
   onSelect,
   availableItems,
 }: {
-  triggerId?: string;
-  id: string;
+  // triggerId?: string;
+  // id: string;
   onSelect: (props: null | { name: string; id: string; metadata: any }) => void;
   availableItems: { id: string; name: string; image: string }[];
 }) {

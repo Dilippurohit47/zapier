@@ -3,6 +3,7 @@
 import { BACKEND_URL } from "@/app/config";
 import { ZapCell } from "@/components/ZapCell";
 import { PrimaryButton } from "@/components/buttons/PrimaryButton";
+import { GithubSelector } from "@/components/models/GithubSelector";
 import { Modal } from "@/components/models/Modal";
 import { TriggerModal } from "@/components/models/triggerModel";
 import axios, { AxiosError } from "axios";
@@ -78,6 +79,8 @@ export default function () {
   };
 
   const [triggerId, setTriggerId] = useState(uuid());
+  console.log(selectedTrigger)
+  console.log(selectedTrigger?.name === "GitHub")
   return (
     <div>
       <div className="flex justify-end p-4">
@@ -171,7 +174,7 @@ export default function () {
 
       {selectedModalId === triggerId && (
         <TriggerModal
-          triggerId={selectedTrigger?.id}
+          // triggerId={selectedTrigger?.id}
           availableItems={availableTriggers}
           onSelect={(
             props: null | { name: string; id: string; metadata: any }
@@ -187,9 +190,13 @@ export default function () {
             });
             setselectedModalId("");
           }}
-          id={selectedModalId}
+          // id={selectedModalId}
         />
       )}
+
+      {selectedTrigger &&
+        selectedTrigger?.name === "GitHub" ? <GithubSelector />
+       : ""}
     </div>
   );
 }
