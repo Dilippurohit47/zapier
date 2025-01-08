@@ -6,8 +6,9 @@ export const PrimaryButton = ({
   size = "small",
 }: {
   children: ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
   size?: "big" | "small";
+  type?:"submit" |"button"
 }) => {
   return (
     <div

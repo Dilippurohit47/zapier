@@ -11,6 +11,7 @@ export const fetchAndSaveUser = async (dispatch: Dispatch) => {
 
     if (res.status === 200) {
       const user = res.data.user;
+      console.log(user)
       dispatch(login());
       dispatch(saveUser(user));
     } else {

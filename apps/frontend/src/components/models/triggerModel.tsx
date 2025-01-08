@@ -1,14 +1,14 @@
 export function TriggerModal({
   onSelect,
   availableItems,
+  setOpenTriggerModel
 }: {
-  // triggerId?: string;
-  // id: string;
+  setOpenTriggerModel:(id:string)=>void
   onSelect: (props: null | { name: string; id: string; metadata: any }) => void;
   availableItems: { id: string; name: string; image: string }[];
 }) {
   return (
-    <div className="fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black bg-slate-100 bg-opacity-70 flex">
+    <div className="fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full  bg-slate-100 bg-opacity-70 flex">
       <div className="relative p-4 w-full max-w-2xl max-h-full">
         <div className="relative bg-white rounded-lg shadow ">
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
@@ -41,7 +41,7 @@ export function TriggerModal({
             <div>
               {availableItems.map(({ id, name, image }) => {
                 return (
-                  <div
+                  <div 
                     key={id}
                     onClick={() => {
                       onSelect({
@@ -49,6 +49,7 @@ export function TriggerModal({
                         name,
                         metadata: {},
                       });
+                      setOpenTriggerModel(id)
                     }}
                     className="flex border p-4 cursor-pointer hover:bg-slate-100"
                   >

@@ -120,6 +120,7 @@ router.get("/", authMiddleware, async (req, res) => {
     select: {
       name: true,
       email: true,
+      githubToken:true,
     },
   });
   res.json({

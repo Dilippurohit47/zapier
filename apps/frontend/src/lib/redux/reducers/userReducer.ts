@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface User {
   name: string;
   email: string;
+  gitHubToken:string
 }
 
 interface UserState {

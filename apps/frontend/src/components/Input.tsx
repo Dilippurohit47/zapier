@@ -3,6 +3,7 @@
 type InputType = "text" | "email" | "password";
 
 export const Input = ({
+  name,
   label,
   placeholder,
   onChange,
@@ -10,6 +11,7 @@ export const Input = ({
   value,
 }: {
   label: string;
+  name?: string;
   placeholder: string;
   onChange: (e: any) => void;
   type?: InputType;
@@ -26,6 +28,7 @@ export const Input = ({
         value={value}
         placeholder={placeholder}
         onChange={onChange}
+        name={name}
       />
     </div>
   );

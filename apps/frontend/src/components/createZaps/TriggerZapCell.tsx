@@ -1,6 +1,6 @@
 import { MdOutlineDeleteOutline } from "react-icons/md";
-import { selectedActionType } from "../app/zap/create/page";
-export const ZapCell = ({
+import { selectedActionType } from "@/app/zap/create/page";
+export const TriggerZapCell = ({
   index,
   name,
   id,
@@ -8,7 +8,7 @@ export const ZapCell = ({
   setSelectedActions,
   selectedActions,
   setselectedModalId,
-  setOpenTriggerModel
+
 }: {
   index: number;
   name?: string;
@@ -17,7 +17,7 @@ export const ZapCell = ({
   setSelectedActions?: (state: selectedActionType[]) => void;
   selectedActions?: selectedActionType[];
   setselectedModalId: (id: string) => void;
-  setOpenTriggerModel?:(id:string) =>void;
+
 }) => {
   const deleteAction = (id: string) => {
     if (selectedActions) {
@@ -29,7 +29,7 @@ export const ZapCell = ({
   };
   return (
     <div
-      onClick={() => {setselectedModalId(id) ,setOpenTriggerModel!(id)}}
+      onClick={() => {setselectedModalId(id)}}
       className="  bg-white px-3 py-3 shadow-lg cursor-pointer flex justify-between border-black w-[300px] rounded-md border-dashed border-[1.5px]"
     >
       <div>

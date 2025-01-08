@@ -3,8 +3,10 @@
 import { BACKEND_URL } from "@/app/config";
 import { ZapCell } from "@/components/ZapCell";
 import { PrimaryButton } from "@/components/buttons/PrimaryButton";
+import { TriggerZapCell } from "@/components/createZaps/TriggerZapCell";
 import { GithubSelector } from "@/components/models/GithubSelector";
 import { Modal } from "@/components/models/Modal";
+import SelectedTriggerModal from "@/components/models/selectedTriggerModal";
 import { TriggerModal } from "@/components/models/triggerModel";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -42,7 +44,6 @@ export default function () {
     id: string;
     name: string;
   }>();
-
   const [selectedActions, setSelectedActions] = useState<selectedActionType[]>(
     []
   );
@@ -79,8 +80,7 @@ export default function () {
   };
 
   const [triggerId, setTriggerId] = useState(uuid());
-  console.log(selectedTrigger)
-  console.log(selectedTrigger?.name === "GitHub")
+  const [openTriggerModel, setOpenTriggerModel] = useState<string>("");
   return (
     <div>
       <div className="flex justify-end p-4">
@@ -88,7 +88,7 @@ export default function () {
       </div>
       <div className="w-full min-h-screen flex flex-col justify-center">
         <div className="flex justify-center w-full">
-          <ZapCell
+          <TriggerZapCell
             id={triggerId}
             setselectedModalId={setselectedModalId}
             name={selectedTrigger?.name ? selectedTrigger.name : "Trigger"}
@@ -174,7 +174,6 @@ export default function () {
 
       {selectedModalId === triggerId && (
         <TriggerModal
-          // triggerId={selectedTrigger?.id}
           availableItems={availableTriggers}
           onSelect={(
             props: null | { name: string; id: string; metadata: any }
@@ -190,13 +189,16 @@ export default function () {
             });
             setselectedModalId("");
           }}
-          // id={selectedModalId}
+          setOpenTriggerModel={setOpenTriggerModel}
         />
       )}
 
-      {selectedTrigger &&
-        selectedTrigger?.name === "GitHub" ? <GithubSelector />
-       : ""}
+      {openTriggerModel && (
+        <SelectedTriggerModal
+          trigger={selectedTrigger}
+          setOpenTriggerModel={setOpenTriggerModel}
+        />
+      )}
     </div>
   );
 }
