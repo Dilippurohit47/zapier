@@ -11,8 +11,7 @@ const id  = req.id
   if (!code) {
     res.status(400).send("Authorization code is missing");
     return;
-  }
-
+  } 
   try {
     const response = await fetch(
       "https://github.com/login/oauth/access_token",
@@ -46,7 +45,7 @@ const id  = req.id
                 githubToken :accessToken
             }
          }) 
-    res.redirect(`http://localhost:3000`);
+    res.redirect(`http://localhost:3000/zap/create`);
       } catch (error) {
     console.error("Error exchanging code for token:", error);
     res.status(500).send("Internal Server Error");

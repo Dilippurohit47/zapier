@@ -1,19 +1,41 @@
-import React from "react";
+"use client";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { GithubSelector } from "./GithubSelector";
 
 type selectedTriggerType = {
-  id: string ;
+  id: string;
   name: string;
 };
 
 const SelectedTriggerModal = ({
   trigger,
-  setOpenTriggerModel
+  setOpenTriggerModel,
 }: {
   trigger: selectedTriggerType | undefined;
-  setOpenTriggerModel:(state:string) =>void
+  setOpenTriggerModel: (state: string) => void;
 }) => {
-  return <div>{trigger?.name === "GitHub" && <GithubSelector setOpenTriggerModel={setOpenTriggerModel} />}</div>;
+  const token = useSelector((state: any) => state.userReducer.user.githubToken);
+  const router = useRouter();
+  const normalizedToken = token === "null" ? null : token;
+  useEffect(() => {
+    if (trigger?.name === "GitHub" && !normalizedToken) {
+      router.push(
+        "https://github.com/login/oauth/authorize?client_id=Ov23liEyUark8iVMzES2&scope=repo,read:repo_hook,write:repo_hook,user&redirect_uri=http://localhost:3002/api/v1/add-app/github/callback"
+      );
+    }
+  }, [trigger, normalizedToken]);
+
+  return (
+    <div>
+      {trigger?.name === "GitHub" && normalizedToken ? (
+        <GithubSelector setOpenTriggerModel={setOpenTriggerModel} />
+      ) : (
+        ""
+      )}
+    </div>
+  );
 };
 
 export default SelectedTriggerModal;

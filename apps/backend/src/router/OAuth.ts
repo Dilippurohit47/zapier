@@ -1,6 +1,6 @@
 import express from "express";
 import { google } from "googleapis";
-import { prisma } from "../db";
+import { prisma } from "@repo/db-v2/prisma";
 import { sendToken } from "../utils/helper";
 import JWT from "jsonwebtoken";
 import dotenv from "dotenv";

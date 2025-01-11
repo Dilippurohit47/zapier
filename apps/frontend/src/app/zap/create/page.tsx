@@ -8,9 +8,11 @@ import { GithubSelector } from "@/components/models/GithubSelector";
 import { Modal } from "@/components/models/Modal";
 import SelectedTriggerModal from "@/components/models/selectedTriggerModal";
 import { TriggerModal } from "@/components/models/triggerModel";
+import { fetchAndSaveUser } from "@/lib/hooks/saveUserInRedux";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
 function useAvailableActionsAndTriggers() {
@@ -81,6 +83,11 @@ export default function () {
 
   const [triggerId, setTriggerId] = useState(uuid());
   const [openTriggerModel, setOpenTriggerModel] = useState<string>("");
+
+const dispatch = useDispatch()
+  useEffect(() =>{
+    fetchAndSaveUser(dispatch)
+  },[])
   return (
     <div>
       <div className="flex justify-end p-4">
