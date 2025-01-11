@@ -9,6 +9,7 @@ export const Input = ({
   onChange,
   type = "text",
   value,
+  className ,
 }: {
   label: string;
   name?: string;
@@ -16,6 +17,7 @@ export const Input = ({
   onChange: (e: any) => void;
   type?: InputType;
   value: string;
+  className?:string,
 }) => {
   return (
     <div>
@@ -23,7 +25,7 @@ export const Input = ({
          <label>{label}</label>
       </div>
       <input
-        className="border text-black rounded px-4 py-2 w-full border-black"
+        className={`border text-black rounded px-4 py-2 w-full border-black ${className && className}`}
         type={type}
         value={value}
         placeholder={placeholder}
