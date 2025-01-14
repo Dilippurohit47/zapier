@@ -50,14 +50,15 @@ export default function () {
     []
   );
   const [selectedModalId, setselectedModalId] = useState<string>("");
-  const router = useRouter();
+  const [triggerMetaData,setTriggerMetaData] = useState()
+  const router = useRouter(); 
   const PublishZap = async () => {
     try {
       const res = await axios.post(
         `${BACKEND_URL}/api/v1/zap`,
         {
           availableTriggerId: selectedTrigger?.id || "",
-          triggerMetadata: {},
+          triggerMetadata: triggerMetaData,
           actions: selectedActions.map((a) => ({
             availableActionId: a.availableActionId,
             actionMetadata: a.metadata,
@@ -70,7 +71,7 @@ export default function () {
       console.log(res);
       if (res.status === 200) {
         toast.success("Zap is Published");
-        router.push("/dashboard");
+        // router.push("/dashboard");
       }
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -88,6 +89,7 @@ const dispatch = useDispatch()
   useEffect(() =>{
     fetchAndSaveUser(dispatch)
   },[])
+  console.log(triggerMetaData)
   return (
     <div>
       <div className="flex justify-end p-4">
@@ -204,6 +206,7 @@ const dispatch = useDispatch()
         <SelectedTriggerModal
           trigger={selectedTrigger}
           setOpenTriggerModel={setOpenTriggerModel}
+          setTriggerMetaData={setTriggerMetaData}
         />
       )}
     </div>

@@ -10,6 +10,7 @@ app.get("/", (req, res) => {
 app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
   const zapId = req.params.zapId;
   const body = req.body;
+  console.log(body)
   if (!body || Object.keys(body).length === 0) {
     res.status(403).json({
       message: "Please enter all fields",

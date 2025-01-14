@@ -2,8 +2,9 @@ import express from "express";
 import { authMiddleware } from "./middleware";
 import { zapCreateSchema } from "../types";
 import { prisma } from "@repo/db-v2/prisma";
-
+import axios from "axios"
 import { errorResponse, formatZodError } from "../utils/helper";
+import { createWebhook } from "./gitHub";
 const router = express.Router();
 router.post("/", authMiddleware, async (req, res) => {
   try {
@@ -18,7 +19,8 @@ router.post("/", authMiddleware, async (req, res) => {
         message: error[0],
       });
       return;
-    }
+    }  
+
     await prisma.$transaction(async (tx: any) => {
       const zap = await tx.zap.create({
         data: {
@@ -38,6 +40,7 @@ router.post("/", authMiddleware, async (req, res) => {
         data: {
           triggerId: parseData.data.availableTriggerId,
           zapId: zap.id,
+          metadata:parseData.data?.triggerMetadata
         },
       });
 
@@ -49,6 +52,9 @@ router.post("/", authMiddleware, async (req, res) => {
           triggerId: trigger.id,
         },
       });
+
+      createWebhook(zap.id,id,body)
+
       return res.json({
         zap: zap.id,
       });

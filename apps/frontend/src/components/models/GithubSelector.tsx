@@ -118,13 +118,15 @@ const CustomDropdownForActions = ({
 
 export function GithubSelector({
   setOpenTriggerModel,
+  setTriggerMetaData
 }: {
   setOpenTriggerModel: (string: string) => void;
 }) {
   const [body, setBody] = useState("");
   const [usersRepo, setUsersRepo] = useState<RepoType[]>([]);
   const [selected, setSelected] = useState<RepoType | null>(null);
-
+  const [trigger, setTrigger] = useState<EventType | null>(null);
+  const [recentCommits, setRecentCommits] = useState([]);
   const [githubActions, setGithubActions] = useState([]);
   const token = useSelector((state: any) => state.userReducer.user.githubToken);
   useEffect(() => {
@@ -143,9 +145,9 @@ export function GithubSelector({
       }
     };
 
-    const fetchGitActions = async () => {
+    const fetchRepoCommits = async () => {
       const res = await axios.get(
-        `https://api.github.com/repos/${selected?.owner.login}/${selected?.name}/hooks`,
+        `https://api.github.com/repos/${selected?.owner.login}/${selected?.name}/commits`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -153,16 +155,17 @@ export function GithubSelector({
           },
         }
       );
-      setGithubActions(res.data);
+      setRecentCommits(res.data);
     };
 
     fetchUserGit();
-    // fetchGitActions();
-  }, [selected]);
+    if (trigger?.name === "New Commit") {
+      fetchRepoCommits();
+    }
+  }, [selected, trigger]);
 
   const events: EventType[] = [
     { name: "New Branch", desc: "Trigger when a new branch is created" },
-    { name: "New commit", desc: "Trigger when a new commit is created" },
     {
       name: "New Commit",
       desc: "Trigger when a new commit is pushed to a repository",
@@ -179,12 +182,13 @@ export function GithubSelector({
     { name: "Fork", desc: "Trigger when a repository is forked" },
     { name: "Release", desc: "Trigger when a new release is published" },
   ];
+  console.log("commits", recentCommits);
 
   return (
     <div className="fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full  bg-slate-100 bg-opacity-70 flex">
       <div className="relative py-4 px-4 border bg-white  border-[#0000002a] w-full max-w-2xl max-h-full shadow-lg rounded-md">
         <h4 className="font-bold my-2">Github</h4>
-        <form className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5">
           <div>
             <label
               htmlFor=""
@@ -206,16 +210,41 @@ export function GithubSelector({
             </label>
             <CustomDropdownForActions
               options={events}
-              saveSelectedOtion={setSelected}
+              saveSelectedOtion={setTrigger}
             />
           </div>
 
+          {trigger && trigger.name === "New Commit" && recentCommits.length > 0 && (
+            <div>
+              <h1 className="text-sm pb-1 pt-2 font-medium text-gray-600">
+                {" "}
+                Few Recent Commits from
+                <span className="text-black ml-1">{selected?.name}</span>
+              </h1>
+              {recentCommits?.slice(0, 4).map((commit: any, index) => (
+                <div className="flex justify-between items-center text-[1rem]">
+                  <span className="font-semibold  text-gray-700 ">
+                    {commit.commit.message}
+                  </span>{" "}
+                  <div>
+                    <span className="text-gray-400">
+                       {commit.commit.author.date.split("T")[0]}
+                    </span>
+                    <span className="text-gray-400">
+                      / {commit.commit.author.name}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
           <div className="pt-2">
-            <button className=" w-full  py-3    cursor-pointer hover:shadow-md bg-[#0D1117] font-semibold text-white rounded-full text-center flex justify-center items-center">
+            <button className=" w-full  py-3    cursor-pointer hover:shadow-md bg-[#0D1117] font-semibold text-white rounded-full text-center flex justify-center items-center" onClick={()=>{setTriggerMetaData({repo:selected,eventName:trigger}),setOpenTriggerModel("")}}>
               Submit
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

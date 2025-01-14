@@ -12,6 +12,7 @@ type selectedTriggerType = {
 const SelectedTriggerModal = ({
   trigger,
   setOpenTriggerModel,
+  setTriggerMetaData,
 }: {
   trigger: selectedTriggerType | undefined;
   setOpenTriggerModel: (state: string) => void;
@@ -30,7 +31,7 @@ const SelectedTriggerModal = ({
   return (
     <div>
       {trigger?.name === "GitHub" && normalizedToken ? (
-        <GithubSelector setOpenTriggerModel={setOpenTriggerModel} />
+        <GithubSelector setOpenTriggerModel={setOpenTriggerModel} setTriggerMetaData={setTriggerMetaData} />
       ) : (
         ""
       )}
