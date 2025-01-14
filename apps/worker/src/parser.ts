@@ -1,48 +1,25 @@
-export function parse(
+import  { GoogleGenerativeAI } from "@google/generative-ai"
+import dotenv from "dotenv";
+dotenv.config()
+console.log("gemini",process.env.GEMINI_API_KEY)
+export async function parse (
   text: string,
   values: any,
   startDelimeter = "{",
   endDelimeter = "}"
 ) {
  try {
-  let startIndex = 0;
-  let endIndex = 1;
-
-  let finalString = "";
-  while (endIndex < text.length) {
-    if (text[startIndex] === startDelimeter) {
-      let endPoint = startIndex + 2;
-      while (text[endPoint] !== endDelimeter) {
-        endPoint++;
-      }
-      //
-      let stringHoldingValue = text.slice(startIndex + 1, endPoint);
-      const keys = stringHoldingValue.split(".");
-      let localValues = {
-        ...values,
-      };
-      for (let i = 0; i < keys.length; i++) {
-        if (typeof localValues === "string") {
-          localValues = JSON.parse(localValues);
-        }
-        // @ts-ignore
-        localValues = localValues[keys[i]];
-      }
-      finalString += localValues;
-      startIndex = endPoint + 1;
-      endIndex = endPoint + 2;
-    } else {
-      finalString += text[startIndex];
-      startIndex++;
-      endIndex++;
-    }
-  }
-  if (text[startIndex]) {
-    finalString += text[startIndex];
-  }
-  return finalString;
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  
+  const prompt = `I am giving u metadata and placeholder you have to return me a object with correct values ${text} and metadata is ${values} you have to put values in placholder by analysing metadata`;
+  
+  const result = await model.generateContent(prompt);
+  console.log()
+  console.log(result.response.text());
  } catch (error) {
   console.log("error from parser",error)
   return error
  }
 }
+ 

@@ -52,33 +52,17 @@ async function main() {
       const zapRunMetadata = zapRunDetails?.metadata;
 
       if (currentAction.type.id === "email") {
-        const cleanString = zapRunMetadata.comment.body.replace(
-          /[\r\n\s{}]/g,
-          ""
-        );
-        const keyValuePairs = cleanString.split(",");
-
-        const resultObject = keyValuePairs.reduce((obj: any, pair: any) => {
-          const [key, value] = pair.split(":");
-          obj[key] = isNaN(value) ? value : parseFloat(value);
-          return obj;
-        }, {});
-        const formattedData = {
-          comment: {
-            email: resultObject.email,
-            amount: resultObject.amount,
-          },
-        };
+      
         const body = parse(
           (currentAction.metadata as JsonObject)?.body as string,
-          formattedData
+          zapRunMetadata
         );
         const to = parse(
           (currentAction.metadata as JsonObject)?.email as string,
-          formattedData
+          zapRunMetadata
         );
         console.log(`Sending out email to ${to} body is ${body}`);
-        await sendEmail(to, body);
+        // await sendEmail(to, body);
       }
       if (currentAction.type.id === "send-sol") {
         const amount = parse(

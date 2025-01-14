@@ -21,7 +21,7 @@ export const createWebhook = async (zapId, id, body) => {
       active: true,
       events: ["push"],
       config: {
-        url: `https://9ed2-106-215-154-96.ngrok-free.app/hooks/catch/${id}/${zapId}`,
+        url: `https://d584-106-215-154-96.ngrok-free.app/hooks/catch/${id}/${zapId}`,
         content_type: "json",
         secret: "password",
       },
