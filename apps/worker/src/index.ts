@@ -53,11 +53,11 @@ async function main() {
 
       if (currentAction.type.id === "email") {
       
-        const body = parse(
+        const body =await  parse(
           (currentAction.metadata as JsonObject)?.body as string,
           zapRunMetadata
         );
-        const to = parse(
+        const to =await parse(
           (currentAction.metadata as JsonObject)?.email as string,
           zapRunMetadata
         );
