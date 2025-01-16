@@ -3,7 +3,8 @@ import { Kafka } from "kafkajs";
 import { parse } from "./parser";
 import { prisma } from "@repo/db-v2/prisma";
 import { sendEmail } from "./email";
- 
+ import dotenv from "dotenv"
+ dotenv.config()
 const TOPIC_Name = "zap-events";
 
 const kafka = new Kafka({
@@ -52,18 +53,16 @@ async function main() {
       const zapRunMetadata = zapRunDetails?.metadata;
 
       if (currentAction.type.id === "email") { 
-      console.log(currentAction.metadata.body)
-        const body = parse(
+        const body =  await parse(
           (currentAction.metadata as JsonObject)?.body as string, 
           zapRunMetadata
         );
-        console.log(body)
         const to = await parse(
           (currentAction.metadata as JsonObject)?.email as string,
           zapRunMetadata
         );
         console.log(`Sending out email to ${to} body is ${body}`);
-        await sendEmail(to, body);
+        await sendEmail(to, body,currentAction.metadata.subject);
       }
       if (currentAction.type.id === "send-sol") {
         const amount = await  parse(

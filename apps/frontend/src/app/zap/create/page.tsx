@@ -51,7 +51,6 @@ export default function () {
   );
   const [selectedModalId, setselectedModalId] = useState<string>("");
   const [triggerMetaData,setTriggerMetaData] = useState()
-  const router = useRouter(); 
   const PublishZap = async () => {
     try {
       const res = await axios.post(

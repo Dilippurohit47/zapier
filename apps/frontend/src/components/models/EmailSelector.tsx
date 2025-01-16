@@ -9,6 +9,7 @@ export function EmailSelector({
 }) {
   const [email, setEmail] = useState("");
   const [body, setBody] = useState("");
+  const [subject, setSubject] = useState("");
 
   return (
     <div>
@@ -18,6 +19,13 @@ export function EmailSelector({
         placeholder="To"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+      ></Input>
+      <Input
+        label={"subject"}
+        type={"text"}
+        placeholder="subject"
+        value={subject}
+        onChange={(e) => setSubject(e.target.value)}
       ></Input>
       <Input
         label={"Body"}
@@ -32,6 +40,7 @@ export function EmailSelector({
             setMetadata({
               email,
               body,
+              subject,
             });
           }}
         >
