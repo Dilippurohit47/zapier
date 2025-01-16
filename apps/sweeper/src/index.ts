@@ -5,7 +5,7 @@ import {prisma} from "@repo/db-v2/prisma"
 const TOPIC_Name = "zap-events";
 const kafka = new Kafka({
   clientId: "outbox-processor", 
-  brokers: ["localhost:9092"],
+  brokers: ["localhost:9092"], 
 }); 
 
 async function main() {
