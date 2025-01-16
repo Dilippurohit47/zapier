@@ -62,6 +62,7 @@ const CustomDropdown = ({
 type EventType = {
   name: string;
   desc: string;
+  event: string;
 };
 const CustomDropdownForActions = ({
   options,
@@ -118,9 +119,10 @@ const CustomDropdownForActions = ({
 
 export function GithubSelector({
   setOpenTriggerModel,
-  setTriggerMetaData
+  setTriggerMetaData,
 }: {
   setOpenTriggerModel: (string: string) => void;
+  setTriggerMetaData: (data:any) => void;
 }) {
   const [body, setBody] = useState("");
   const [usersRepo, setUsersRepo] = useState<RepoType[]>([]);
@@ -165,22 +167,41 @@ export function GithubSelector({
   }, [selected, trigger]);
 
   const events: EventType[] = [
-    { name: "New Branch", desc: "Trigger when a new branch is created" },
+    {
+      name: "New Branch",
+      desc: "Trigger when a new branch is created",
+      event: "create", // Corresponds to the "create" event in GitHub
+    },
     {
       name: "New Commit",
       desc: "Trigger when a new commit is pushed to a repository",
+      event: "push", // Corresponds to the "push" event in GitHub
     },
     {
       name: "New Pull Request",
       desc: "Trigger when a new pull request is created",
+      event: "pull_request", // Corresponds to the "pull_request" event in GitHub
     },
-    { name: "New Issue", desc: "Trigger when a new issue is opened" },
+    {
+      name: "New Issue",
+      desc: "Trigger when a new issue is opened",
+      event: "issues", // Corresponds to the "issues" event in GitHub
+    },
     {
       name: "Issue Comment",
       desc: "Trigger when a comment is added to an issue",
+      event: "issue_comment", // Corresponds to the "issue_comment" event in GitHub
     },
-    { name: "Fork", desc: "Trigger when a repository is forked" },
-    { name: "Release", desc: "Trigger when a new release is published" },
+    {
+      name: "Fork",
+      desc: "Trigger when a repository is forked",
+      event: "fork", // Corresponds to the "fork" event in GitHub
+    },
+    {
+      name: "Release",
+      desc: "Trigger when a new release is published",
+      event: "release", // Corresponds to the "release" event in GitHub
+    },
   ];
   console.log("commits", recentCommits);
 
@@ -214,33 +235,41 @@ export function GithubSelector({
             />
           </div>
 
-          {trigger && trigger.name === "New Commit" && recentCommits.length > 0 && (
-            <div>
-              <h1 className="text-sm pb-1 pt-2 font-medium text-gray-600">
-                {" "}
-                Few Recent Commits from
-                <span className="text-black ml-1">{selected?.name}</span>
-              </h1>
-              {recentCommits?.slice(0, 4).map((commit: any, index) => (
-                <div className="flex justify-between items-center text-[1rem]">
-                  <span className="font-semibold  text-gray-700 ">
-                    {commit.commit.message}
-                  </span>{" "}
-                  <div>
-                    <span className="text-gray-400">
-                       {commit.commit.author.date.split("T")[0]}
-                    </span>
-                    <span className="text-gray-400">
-                      / {commit.commit.author.name}
-                    </span>
+          {trigger &&
+            trigger.name === "New Commit" &&
+            recentCommits.length > 0 && (
+              <div>
+                <h1 className="text-sm pb-1 pt-2 font-medium text-gray-600">
+                  {" "}
+                  Few Recent Commits from
+                  <span className="text-black ml-1">{selected?.name}</span>
+                </h1>
+                {recentCommits?.slice(0, 4).map((commit: any, index) => (
+                  <div className="flex justify-between items-center text-[1rem]">
+                    <span className="font-semibold  text-gray-700 ">
+                      {commit.commit.message}
+                    </span>{" "}
+                    <div>
+                      <span className="text-gray-400">
+                        {commit.commit.author.date.split("T")[0]}
+                      </span>
+                      <span className="text-gray-400">
+                        / {commit.commit.author.name}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
 
           <div className="pt-2">
-            <button className=" w-full  py-3    cursor-pointer hover:shadow-md bg-[#0D1117] font-semibold text-white rounded-full text-center flex justify-center items-center" onClick={()=>{setTriggerMetaData({repo:selected,eventName:trigger}),setOpenTriggerModel("")}}>
+            <button
+              className=" w-full  py-3    cursor-pointer hover:shadow-md bg-[#0D1117] font-semibold text-white rounded-full text-center flex justify-center items-center"
+              onClick={() => {
+                setTriggerMetaData({ repo: selected, eventName: trigger }),
+                  setOpenTriggerModel("");
+              }}
+            >
               Submit
             </button>
           </div>

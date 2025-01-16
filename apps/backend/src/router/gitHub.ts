@@ -4,9 +4,10 @@ import express from "express";
 
 // const app =express.Router()
 
-export const createWebhook = async (zapId, id, body) => {
+export const createWebhook = async (zapId:string, id:string, body:any) => {
   try {
-    const repo = body.triggerMetadata.repo;
+    console.log(body.eventName.event)
+    const repo = body.repo;
     // http://localhost:4000/hooks/catch/1/94f5bc9a-f76a-4641-929d-3b41131da18b
 
     const user = await prisma.user.findUnique({
@@ -19,9 +20,9 @@ export const createWebhook = async (zapId, id, body) => {
     const data = {
       name: "web",
       active: true,
-      events: ["push"],
+      events: [`${body.eventName.event}`],
       config: {
-        url: `https://d584-106-215-154-96.ngrok-free.app/hooks/catch/${id}/${zapId}`,
+        url: `  https://4e2b-106-222-205-201.ngrok-free.app/hooks/catch/${id}/${zapId}`,
         content_type: "json",
         secret: "password",
       },

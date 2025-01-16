@@ -63,8 +63,7 @@ async function main() {
           zapRunMetadata
         );
         console.log(`Sending out email to ${to} body is ${body}`);
-
-        // await sendEmail(to, body);
+        await sendEmail(to, body);
       }
       if (currentAction.type.id === "send-sol") {
         const amount = await  parse(

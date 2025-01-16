@@ -20,7 +20,6 @@ router.post("/", authMiddleware, async (req, res) => {
       });
       return;
     }  
-
     await prisma.$transaction(async (tx: any) => {
       const zap = await tx.zap.create({
         data: {
@@ -53,7 +52,7 @@ router.post("/", authMiddleware, async (req, res) => {
         },
       });
 
-      createWebhook(zap.id,id,body)
+      createWebhook(zap.id,id,body.triggerMetadata)
 
       return res.json({
         zap: zap.id,
