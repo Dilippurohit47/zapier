@@ -20,7 +20,7 @@ const CustomDropdown = ({
   const handleSelect = (option: RepoType) => {
     setSelected(option);
     saveSelectedOption(option);
-    setsearchRepo("")
+    setsearchRepo("");
   };
   const [searchRepo, setsearchRepo] = useState<string>("");
 
@@ -68,18 +68,20 @@ const CustomDropdown = ({
             />
           </div>
           <ul className="absolute w-full mt-1 bg-white border rounded shadow-lg z-10 overflow-y-auto h-[20rem]">
-            {repos.map((repo) => (
-              <li
-                key={repo.id}
-                className="py-2 px-3 hover:bg-gray-100 cursor-pointer flex justify-between items-center"
-                onClick={() => {
-                  handleSelect(repo), setShowRepos(false);
-                }}
-              >
-                <span className="font-semibold">{repo.name}</span>{" "}
-                <span className="text-gray-400">/ {repo.owner.login}</span>
-              </li>
-            ))}
+            {repos
+              ? repos.map((repo) => (
+                  <li
+                    key={repo.id}
+                    className="py-2 px-3 hover:bg-gray-100 cursor-pointer flex justify-between items-center"
+                    onClick={() => {
+                      handleSelect(repo), setShowRepos(false);
+                    }}
+                  >
+                    <span className="font-semibold">{repo.name}</span>{" "}
+                    <span className="text-gray-400">/ {repo.owner.login}</span>
+                  </li>
+                ))
+              : "no repos"}
           </ul>
         </>
       )}
