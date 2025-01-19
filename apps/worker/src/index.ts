@@ -57,11 +57,12 @@ async function main() {
           (currentAction.metadata as JsonObject)?.body as string, 
           zapRunMetadata
         );
-        const to = await parse(
+        const to= await parse(
           (currentAction.metadata as JsonObject)?.email as string,
           zapRunMetadata
         );
         console.log(`Sending out email to ${to} body is ${body}`);
+        // @ts-ignore
         await sendEmail(to, body,currentAction.metadata.subject);
       }
       if (currentAction.type.id === "send-sol") {

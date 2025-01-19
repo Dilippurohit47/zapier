@@ -16,6 +16,7 @@ const SelectedTriggerModal = ({
 }: {
   trigger: selectedTriggerType | undefined;
   setOpenTriggerModel: (state: string) => void;
+  setTriggerMetaData:(state: any)=>void;
 }) => {
   const token = useSelector((state: any) => state.userReducer.user.githubToken);
   const router = useRouter();

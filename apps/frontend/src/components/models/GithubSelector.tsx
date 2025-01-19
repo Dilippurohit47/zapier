@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import axios from "axios";
+import { CiSearch } from "react-icons/ci";
 import { useSelector } from "react-redux";
 type RepoType = {
   [key: string]: any;
@@ -8,17 +9,32 @@ type RepoType = {
 
 const CustomDropdown = ({
   options,
-  saveSelectedOtion,
+  saveSelectedOption,
 }: {
   options: RepoType[];
-  saveSelectedOtion: (option: RepoType) => void;
+  saveSelectedOption: (option: RepoType) => void;
 }) => {
+  const [repos, setRepos] = useState<RepoType[] | null>(null);
   const [selected, setSelected] = useState<RepoType | null>(null);
   const [showRepos, setShowRepos] = useState<boolean>(false);
   const handleSelect = (option: RepoType) => {
     setSelected(option);
-    saveSelectedOtion(option);
+    saveSelectedOption(option);
+    setsearchRepo("")
   };
+  const [searchRepo, setsearchRepo] = useState<string>("");
+
+  useEffect(() => {
+    if (searchRepo) {
+      const searchResults = options.filter((repo) => {
+        return repo.name.toLowerCase().includes(searchRepo.toLowerCase());
+      });
+      setRepos(searchResults);
+    }
+    if (!searchRepo) {
+      setRepos(options);
+    }
+  }, [searchRepo, options]);
 
   return (
     <div className="relative w-full">
@@ -40,20 +56,32 @@ const CustomDropdown = ({
 
       {/* Dropdown menu */}
       {showRepos && (
-        <ul className="absolute w-full mt-1 bg-white border rounded shadow-lg z-10 overflow-y-auto h-[20rem]">
-          {options.map((repo) => (
-            <li
-              key={repo.id}
-              className="py-2 px-3 hover:bg-gray-100 cursor-pointer flex justify-between items-center"
-              onClick={() => {
-                handleSelect(repo), setShowRepos(false);
-              }}
-            >
-              <span className="font-semibold">{repo.name}</span>{" "}
-              <span className="text-gray-400">/ {repo.owner.login}</span>
-            </li>
-          ))}
-        </ul>
+        <>
+          <div className="border  border-gray-400 rounded-md flex gap-3 item-center px-2 py-1 ">
+            <div className=" flex items-center">
+              <CiSearch size={20} />
+            </div>
+            <input
+              placeholder="search repo"
+              className=" focus:outline-none  border-0  w-full"
+              onChange={(e) => setsearchRepo(e.target.value)}
+            />
+          </div>
+          <ul className="absolute w-full mt-1 bg-white border rounded shadow-lg z-10 overflow-y-auto h-[20rem]">
+            {repos.map((repo) => (
+              <li
+                key={repo.id}
+                className="py-2 px-3 hover:bg-gray-100 cursor-pointer flex justify-between items-center"
+                onClick={() => {
+                  handleSelect(repo), setShowRepos(false);
+                }}
+              >
+                <span className="font-semibold">{repo.name}</span>{" "}
+                <span className="text-gray-400">/ {repo.owner.login}</span>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );
@@ -66,16 +94,16 @@ type EventType = {
 };
 const CustomDropdownForActions = ({
   options,
-  saveSelectedOtion,
+  saveSelectedOption,
 }: {
   options: EventType[];
-  saveSelectedOtion: (option: any) => void;
+  saveSelectedOption: (option: any) => void;
 }) => {
   const [selected, setSelected] = useState<EventType | null>(null);
   const [showRepos, setShowRepos] = useState<boolean>(false);
   const handleSelect = (option: EventType) => {
     setSelected(option);
-    saveSelectedOtion(option);
+    saveSelectedOption(option);
   };
 
   return (
@@ -122,14 +150,12 @@ export function GithubSelector({
   setTriggerMetaData,
 }: {
   setOpenTriggerModel: (string: string) => void;
-  setTriggerMetaData: (data:any) => void;
+  setTriggerMetaData: (data: any) => void;
 }) {
-  const [body, setBody] = useState("");
   const [usersRepo, setUsersRepo] = useState<RepoType[]>([]);
   const [selected, setSelected] = useState<RepoType | null>(null);
   const [trigger, setTrigger] = useState<EventType | null>(null);
   const [recentCommits, setRecentCommits] = useState([]);
-  const [githubActions, setGithubActions] = useState([]);
   const token = useSelector((state: any) => state.userReducer.user.githubToken);
   useEffect(() => {
     const fetchUserGit = async () => {
@@ -203,12 +229,19 @@ export function GithubSelector({
       event: "release", // Corresponds to the "release" event in GitHub
     },
   ];
-  console.log("commits", recentCommits);
 
   return (
     <div className="fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full  bg-slate-100 bg-opacity-70 flex">
       <div className="relative py-4 px-4 border bg-white  border-[#0000002a] w-full max-w-2xl max-h-full shadow-lg rounded-md">
         <h4 className="font-bold my-2">Github</h4>
+        {trigger && selected && (
+          <h6 className="">
+            Whenever new <span className="font-semibold">{trigger.name}</span>{" "}
+            will happen in your{" "}
+            <span className="font-semibold">{selected.name}</span> this trigger
+            will run
+          </h6>
+        )}
         <div className="flex flex-col gap-5">
           <div>
             <label
@@ -219,7 +252,7 @@ export function GithubSelector({
             </label>
             <CustomDropdown
               options={usersRepo}
-              saveSelectedOtion={setSelected}
+              saveSelectedOption={setSelected}
             />
           </div>
           <div>
@@ -231,7 +264,7 @@ export function GithubSelector({
             </label>
             <CustomDropdownForActions
               options={events}
-              saveSelectedOtion={setTrigger}
+              saveSelectedOption={setTrigger}
             />
           </div>
 
