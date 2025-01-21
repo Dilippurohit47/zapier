@@ -1,3 +1,14 @@
+declare global {
+  namespace Express {
+    export interface Request { 
+      id:string;
+    }
+  }
+}
+
+
+
+
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { JWT_PASSWORD } from "../config";
@@ -16,7 +27,7 @@ export async function authMiddleware(
     }
     const payload = jwt.verify(token, JWT_PASSWORD!);
     // @ts-ignore
-    req.id = payload.id;
+    req.id = payload.id; ;
     next();
   } catch (error) {
     res.status(403).json({
