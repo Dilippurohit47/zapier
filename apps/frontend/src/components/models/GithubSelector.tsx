@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import { RxCross2 } from "react-icons/rx";
 import axios from "axios";
 import { CiSearch } from "react-icons/ci";
 import { useSelector } from "react-redux";
@@ -235,7 +235,12 @@ export function GithubSelector({
   return (
     <div className="fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full  bg-slate-100 bg-opacity-70 flex">
       <div className="relative py-4 px-4 border bg-white  border-[#0000002a] w-full max-w-2xl max-h-full shadow-lg rounded-md">
-        <h4 className="font-bold my-2">Github</h4>
+      <div className="w-full flex justify-between items-center">
+      <h4 className="font-bold my-2">Github</h4>
+      <div onClick={()=>{setOpenTriggerModel("")}} className="  cursor-pointer hover:bg-gray-200 p-1 rounded-md transition ease-in duration-100">
+        < RxCross2  size={22} />
+      </div>
+      </div>
         {trigger && selected && (
           <h6 className="">
             Whenever new <span className="font-semibold">{trigger.name}</span>{" "}
@@ -299,6 +304,7 @@ export function GithubSelector({
 
           <div className="pt-2">
             <button
+            disabled={!selected || !trigger}
               className=" w-full  py-3    cursor-pointer hover:shadow-md bg-[#0D1117] font-semibold text-white rounded-full text-center flex justify-center items-center"
               onClick={() => {
                 setTriggerMetaData({ repo: selected, eventName: trigger }),
